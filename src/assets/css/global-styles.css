@@ -1,0 +1,72 @@
+.transition500 {
+    transition: all 500ms;
+}
+
+.theme--light.v-navigation-drawer:not(.v-navigation-drawer--floating) .v-navigation-drawer__border {
+    background-color: transparent !important;
+}
+
+.boxShawdom {
+    box-shadow: rgba(89, 102, 122, 0.1) 0px 0px 20px !important;
+}
+
+.v-list-item .v-list-item__title,
+.v-list-item__icon .v-icon {
+    font-size: 14px;
+}
+
+.v-application--is-ltr .v-list-item__icon:first-child {
+    margin-right: 10px !important;
+    margin-left: 18px !important;
+}
+
+.v-application--is-ltr .v-list-item__icon:last-of-type:not(:only-child) {
+    margin-left: 18px !important;
+}
+
+#dash .fa-chevron-down {
+    display: none !important;
+}
+
+.content {
+    margin-top: 80px !important;
+    padding: 0px 24px !important
+}
+
+.container--fluid {
+    max-width: 100% !important;
+}
+
+
+
+
+/* Animaciones */
+
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.fast {
+    -webkit-animation-duration: 0.4s;
+    animation-duration: 0.4s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeIn {
+    animation-name: fadeIn;
+    animation-duration: 1s;
+}
