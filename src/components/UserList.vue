@@ -1,5 +1,4 @@
 <template>
-  <MainLayout class="fadeIn">
     <v-container fluid>
       <PageHeader
         class="mt-10 mx-2 mx-sm-16"
@@ -39,7 +38,7 @@
 
                 <v-card-text>
                   <v-alert
-                    v-for="(error, idx) in errors"
+                    v-for="(error, idx) in getErrors"
                     :key="idx"
                     dense
                     text
@@ -81,7 +80,7 @@
                       </v-col>
                       <v-col class="d-flex" cols="12" sm="6" md="6">
                         <v-select
-                          :items="selectItems"
+                          :items="rolesItems"
                           label="Role"
                           v-model="editedItem.user_rol_id"
                         ></v-select>
@@ -140,21 +139,17 @@
         </template>
       </v-data-table>
     </v-container>
-  </MainLayout>
 </template>
 
 <script>
-import PageHeader from "./PageHeader";
-import TableCrud from "./TableCrud";
-import MainLayout from "./MainLayout";
-import { mapActions, mapState } from "vuex";
+import PageHeader from './PageHeader';
+
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
   name: "UserList",
   components: {
-    PageHeader,
-    TableCrud,
-    MainLayout,
+    PageHeader
   },
   data() {
     return {
@@ -170,20 +165,18 @@ export default {
         email: "",
         password: "",
         user_rol_id: "",
-        password: "",
       },
       defaultItem: {
         first_name: "",
         last_name: "",
         email: "",
-        password: "",
         user_rol_id: "",
         password: "",
       },
       headersTable: [
         { text: "Name", value: "full_name" },
         { text: "Email", value: "email" },
-        { text: "Role", value: "role_name" },
+        { text: "Role", value: "UserRole.name" },
         { text: "Actions", value: "actions", sortable: false },
       ],
       breadcrumbps: [
@@ -199,21 +192,12 @@ export default {
         },
       ],
       titlePageHeader: "User list",
-      // rules: {
-      //   required: (value) => !!value || "Required.",
-      //   min: (v) => v.length >= 8 || "Min 8 characters",
-      //   emailMatch: () => `The email and password you entered don't match`,
-      // },
       show1: false,
-      selectItems: [
-        { text: "Admin", value: 1 },
-        { text: "User", value: 2 },
-        { text: "Receptionist", value: 4 },
-      ],
+      rolesItems: [],
     };
   },
   computed: {
-    ...mapState(["errors"]),
+    ...mapGetters('auth', ['getErrors']),
     formTitle() {
       return this.editedIndex === -1 ? "Add user" : "Edit user";
     },
@@ -231,9 +215,14 @@ export default {
     this.initialize();
   },
   methods: {
-    ...mapActions(["getUsers", "registerUser", "desactiveUser", "updatedUser"]),
+    ...mapActions('auth',['registerUser', 'getUsers', 'getUserRoles', 'updateUser', 'desactiveUser', 'setErrors']),
     async initialize() {
       this.users = await this.getUsers();
+      const roles = await this.getUserRoles();
+      this.rolesItems = roles.map(role => {
+        return {text: role.name, value: role.id}
+      });
+      this.setErrors('clear');
     },
     editItem(item) {
       this.editedIndex = 1;
@@ -242,16 +231,13 @@ export default {
     },
 
     deleteItem(item) {
-      //   this.editedIndex = this.data.indexOf(item);
-      //   this.editedItem = Object.assign({}, item);
       this.idDelete = item.id;
       this.dialogDelete = true;
     },
 
     async deleteItemConfirm() {
-      //   this.data.splice(this.editedIndex, 1);
       await this.desactiveUser(this.idDelete);
-      if (this.errors.length == 0) {
+      if (this.getErrors.length == 0) {
         this.closeDelete();
         this.initialize();
       }
@@ -274,21 +260,16 @@ export default {
     },
 
     async save() {
-      //   if (this.editedIndex > -1) {
-      //     Object.assign(this.data[this.editedIndex], this.editedItem);
-      //   } else {
-      //     this.data.push(this.editedItem);
-      //   }
 
       if (!this.editedItem.id) {
         await this.registerUser(this.editedItem);
-        if (this.errors.length == 0) {
+        if (this.getErrors.length == 0) {
           this.close();
           this.initialize();
         }
       } else {
-        await this.updatedUser(this.editedItem);
-        if (this.errors.length == 0) {
+        await this.updateUser(this.editedItem);
+        if (this.getErrors.length == 0) {
           this.close();
           this.initialize();
         }

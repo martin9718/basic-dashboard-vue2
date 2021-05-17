@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <h1>Default</h1>
+  <v-app>
     <slot />
-  </div>
+  </v-app>
 </template>
 
 <script>

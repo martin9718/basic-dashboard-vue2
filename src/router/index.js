@@ -1,23 +1,41 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store';
 
 
 Vue.use(VueRouter)
 
-const routes = [{
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue'),
-    meta:{
-      layout: 'DashboardLayout'
+const routes = [
+    {
+        path: '/',
+        name: 'Home',
+        component: () => import('../views/Home.vue'),
+        meta: {
+            layout: 'DashboardLayout'
+        }
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: () => import('../views/LoginOld'),
+        meta: {
+            isLogout: true
+        }
+    },
+    {
+        path: '/users',
+        name: 'UserList',
+        component: () => import('../components/UserList'),
+        meta: {
+            layout: 'DashboardLayout'
+        }
     }
-  }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 });
 
 // let roleRedirect;
@@ -34,7 +52,7 @@ const router = new VueRouter({
 //   }
 // }
 
-// router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, from, next) => {
 
 //   if (to.meta.isAuthenticated) {
 
@@ -84,17 +102,16 @@ const router = new VueRouter({
 //   }
 
 
+  if (to.meta.isLogout) {
+    if (store.getters["auth/getToken"]) {
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 
-
-//   if (to.meta.isLogout) {
-//     if (localStorage.getItem('token')) {
-//       next('/admin');
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// })
+})
 
 export default router

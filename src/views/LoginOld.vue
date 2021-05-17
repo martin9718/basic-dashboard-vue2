@@ -1,26 +1,25 @@
 <template>
-  <v-app class="login">
-    <v-row>
+    <div class="row">
       <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-        <form @submit.prevent="getToken(user)">
+        <form @submit.prevent="login(user)">
           <div class="form-logo">
             <i
-                class="fas fa-gavel primary--text mr-2"
-                style="font-size: 30px"
+              class="fas fa-file-invoice-dollar primary--text mr-2"
+              style="font-size: 30px"
             ></i>
 
-            <h1 style="font-size: 30px">Lawyers</h1>
+            <h1 style="font-size: 30px">Declara Fàcil</h1>
           </div>
           <p class="text-center" style="font-size: 24px">
             Sign into your account
           </p>
 
           <v-alert
-              v-for="(error, idx) in errors"
-              :key="idx"
-              dense
-              text
-              type="error"
+            v-for="(error, idx) in getErrors"
+            :key="idx"
+            dense
+            text
+            type="error"
           >
             {{ error }}
           </v-alert>
@@ -33,11 +32,11 @@
               </div>
             </div>
             <input
-                type="email"
-                class="form-control"
-                id="email"
-                v-model="user.email"
-                required
+              type="email"
+              class="form-control"
+              id="email"
+              v-model="user.email"
+              required
             />
           </div>
           <label class="form-label" for="password">Password</label>
@@ -48,41 +47,41 @@
               </div>
             </div>
             <input
-                type="password"
-                class="form-control"
-                id="password"
-                v-model="user.password"
-                required
+              type="password"
+              class="form-control"
+              id="password"
+              v-model="user.password"
+              required
             />
           </div>
 
           <button
-              class="btn btn-primary btn-block"
-              style="background-color: #276678; border-color: #276678"
+            class="btn btn-primary btn-block"
+            style="background-color: #276678; border-color: #276678"
           >
             Login
           </button>
         </form>
       </div>
-      <v-col cols="12" sm="6" md="6" lg="8"
-          style="background-color: #276678"
-          class="banner"
+      <div
+        style="background-color: #276678"
+        class="banner col-0 col-sm-6 col-md-6 col-lg-8"
       >
         <h1 class="white--text">Welcome</h1>
-      </v-col>
-    </v-row>
-  </v-app>
+      </div>
+    </div>
+
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Login",
   computed: {
-    ...mapState(["errors"]),
+    ...mapGetters('auth', ['getErrors'])
   },
   methods: {
-    ...mapActions(["getToken"]),
+    ...mapActions('auth', ['login'])
   },
   data() {
     let user = {};
@@ -95,6 +94,7 @@ export default {
 </script>
 
 <style scoped>
+@import "../../node_modules/bootstrap/dist/css/bootstrap.css";
 
 form {
   width: 80%;

@@ -7,25 +7,29 @@
       </v-avatar>
       <div>
         <p class="mb-1 mt-5 mx-5" style="font-size: 14px; font-weight: bold">
-          Martín Cervantes
+          {{ getUser.full_name ? getUser.full_name : ''}}
         </p>
         <p class="mt-1" style="font-size: 12px; text-align: center">
-          Admin
+          {{ getUser.user_rol_name ? getUser.user_rol_name : '' }}
         </p>
       </div>
       <v-btn icon>
-        <v-icon>mdi-export</v-icon>
+        <v-icon @click="logout">mdi-export</v-icon>
       </v-btn>
     </v-app-bar>
 </template>
 
 <script>
-import { mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 export default {
   name: "Navbar",
-  methods: {
-    ...mapActions(["setDraw"]),
+  computed:{
+    ...mapGetters('auth', ['getUser'])
   },
+  methods: {
+    ...mapActions(['setDraw',]),
+    ...mapActions('auth',['logout',]),
+  }
 };
 </script>
 

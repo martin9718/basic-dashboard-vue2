@@ -5,10 +5,11 @@ import SecureLS from "secure-ls";
 const ls = new SecureLS({
   isCompression: false
 });
-
 Vue.use(Vuex)
 
-// const URL_API = 'http://localhost';
+
+import auth from "../modules/auth";
+
 
 export default new Vuex.Store({
   state: {
@@ -31,7 +32,9 @@ export default new Vuex.Store({
       commit('setDraw')
     }
   },
-  modules: {},
+  modules: {
+    auth
+  },
   getters: {
     getDraw(state){
       return state.draw
